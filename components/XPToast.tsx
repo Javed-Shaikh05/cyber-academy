@@ -47,16 +47,13 @@ export default function XPToast() {
   if (!current) return null;
 
   return (
-    <div
-      className={`fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-100 max-w-[calc(100vw-2rem)] sm:max-w-sm transition-all duration-300 ${
-        visible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-4 pointer-events-none"
-      }`}
-    >
+    <div className="fixed bottom-6 right-4 z-50 animate-slide-in-up">
       <div className="space-y-2">
         {/* XP earned */}
-        <div className="glass glow-cyan p-3 sm:p-4 relative">
+        <div
+          className="flex items-center gap-3 px-4 py-3 border font-mono relative"
+          style={{ background: 'rgba(0,255,65,0.08)', borderColor: 'rgba(0,255,65,0.35)', boxShadow: '0 0 20px rgba(0,255,65,0.2)' }}
+        >
           <button
             onClick={dismiss}
             className="absolute top-2 right-2 text-gray-400 hover:text-white"
@@ -65,13 +62,13 @@ export default function XPToast() {
             <X className="w-3.5 h-3.5" />
           </button>
           <div className="flex items-center gap-3 pr-5">
-            <div className="p-2 bg-linear-to-r from-cyan-500 to-violet-500 rounded-lg shrink-0">
-              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" />
+            <div className="p-2 rounded-lg shrink-0" style={{ background: 'rgba(0,255,65,0.15)' }}>
+              <Sparkles className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: '#00ff41' }} />
             </div>
             <div className="min-w-0">
-              <p className="font-bold text-base sm:text-lg">
+              <span className="font-mono font-bold text-lg" style={{ color: '#00ff41', textShadow: '0 0 8px rgba(0,255,65,0.6)' }}>
                 +{current.xp_earned} XP
-              </p>
+              </span>
               {current.streak_bonus && current.streak_bonus > 0 && (
                 <p className="text-xs text-orange-400 flex items-center gap-1">
                   <Flame className="w-3 h-3" /> {current.streak}-day streak (+

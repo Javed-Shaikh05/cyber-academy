@@ -73,15 +73,17 @@ export default async function Dashboard() {
   const name = stats?.display_name || user.email?.split("@")[0] || "Learner";
 
   return (
-    <main className="min-h-screen pb-24 sm:pb-12">
+    <main className="min-h-screen pb-24 sm:pb-12 cyber-grid">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 sm:py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-5 sm:mb-8 gap-3">
+        <div className="flex items-center justify-between mb-5 sm:mb-8 gap-3 pb-4 border-b border-[var(--cyber-border)]">
           <Link href="/profile" className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1 group">
             <ProfileAvatar url={stats?.avatar_url} name={name} size={44} level={rank.level} />
             <div className="min-w-0">
-              <p className="text-[10px] sm:text-xs text-gray-400 leading-tight">Welcome back,</p>
-              <h1 className="text-base sm:text-2xl font-bold capitalize truncate group-hover:text-cyan-300 transition leading-tight">
+              <p className="text-[10px] font-mono text-[#5a8a5a] tracking-widest uppercase leading-tight">
+                &gt; Operator
+              </p>
+              <h1 className="text-base sm:text-xl font-mono font-bold capitalize truncate text-[var(--cyber-green)] group-hover:text-white transition leading-tight" style={{ textShadow: '0 0 10px rgba(0,255,65,0.3)' }}>
                 {name}
               </h1>
             </div>

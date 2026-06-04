@@ -13,10 +13,10 @@ interface Props {
 
 // Ring color by level (higher level = fancier ring)
 function ringStyle(level: number = 1) {
-    if (level >= 10) return 'from-yellow-400 via-orange-400 to-red-400'    // 🔥 legendary
-    if (level >= 7) return 'from-pink-400 via-violet-400 to-cyan-400'     // 💫 epic
-    if (level >= 4) return 'from-cyan-400 to-violet-400'                  // 🌊 rare
-    return 'from-gray-500 to-gray-400'                                     // ⚪ default
+    if (level >= 10) return 'from-yellow-400 via-red-400 to-orange-400'     // 🔥 elite
+    if (level >= 7) return 'from-[#00ff41] via-[#00d4ff] to-[#00ff41]'    // 💚 advanced
+    if (level >= 4) return 'from-[#00ff41] to-[#005a20]'                   // 🌿 skilled
+    return 'from-[#1a3a1a] to-[#0a200a]'                                    // ⬛ recruit
 }
 
 export default function ProfileAvatar({ url, name, size = 80, level = 1, showRing = true }: Props) {

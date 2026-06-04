@@ -5,6 +5,7 @@ import Link from "next/link";
 import {
   ArrowLeft, Loader2, Shield, Network, Lock, ShieldAlert, Globe, ShieldCheck, Radar,
   CheckCircle2, Circle, PlayCircle,
+  Sparkles,
 } from 'lucide-react'
 
 const ICONS: Record<string, any> = { Shield, Network, Lock, ShieldAlert, Globe, ShieldCheck, Radar }

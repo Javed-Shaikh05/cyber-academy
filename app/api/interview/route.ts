@@ -9,15 +9,33 @@ interface Question {
   score: number | null;
 }
 
-const TRACKS: Record<string, string> = {
-  technical:
-    "Python, SQL, data manipulation, and coding problem-solving for data science",
-  ml_concepts:
-    "machine learning concepts: algorithms, model evaluation, bias-variance, overfitting, feature engineering",
-  stats:
-    "statistics and probability: distributions, hypothesis testing, p-values, A/B testing",
-  behavioral:
-    "behavioral and project-experience questions, communication, teamwork, handling failure",
+interface Track {
+  name: string;
+  description: string;
+  questionCount: number;
+}
+
+const TRACKS: Record<string, Track> = {
+  security_fundamentals: {
+    name: 'Security Fundamentals',
+    description: 'CIA triad, threat landscape, basic concepts',
+    questionCount: 5,
+  },
+  network_security: {
+    name: 'Network Security',
+    description: 'Firewalls, VPNs, protocols, network attacks',
+    questionCount: 5,
+  },
+  web_security: {
+    name: 'Web & App Security',
+    description: 'OWASP Top 10, XSS, SQL injection defense',
+    questionCount: 5,
+  },
+  cryptography: {
+    name: 'Cryptography',
+    description: 'Encryption, hashing, PKI, TLS/HTTPS',
+    questionCount: 5,
+  },
 };
 
 // ACTION: start — creates interview, returns first question
@@ -34,34 +52,62 @@ export async function POST(req: NextRequest) {
 
     // ── START ──
     if (action === "start") {
-      const focus = TRACKS[track] || TRACKS.technical;
-      const firstQ = await generateWithRetry({
-        prompt: `You are a senior Data Scientist conducting a ${difficulty}-difficulty technical interview at a top tech company (FAANG-level). Focus area: ${focus}.
+      const trackConfig = TRACKS[track] || TRACKS.security_fundamentals;
+      const prompt = `You are a cybersecurity hiring manager interviewing a junior security analyst candidate.
 
-Ask your FIRST interview question. Make it realistic and appropriately challenging for ${difficulty} level. Ask ONE clear question. No preamble, no "welcome" — just the question as an interviewer would pose it.`,
-      });
+INTERVIEW TRACK: ${trackConfig.name}
+FOCUS: ${trackConfig.description}
 
-      const { data: interview } = await supabase
+Ask ${trackConfig.questionCount} interview questions. Mix conceptual understanding, real-world scenarios, and "how would you defend against X" questions.
+
+Respond ONLY with valid JSON:
+{
+  "questions": [
+    {
+      "id": "q1",
+      "question": "<interview question>",
+      "type": "open",
+      "hint": "<what a good answer should cover>"
+    }
+  ]
+}`;
+
+      const raw = await generateWithRetry({ prompt, jsonMode: true });
+
+      let allQuestions: Array<{ question: string }> = [];
+      try {
+        let cleaned = raw.replace(/```json\s*/gi, '').replace(/```/g, '').trim();
+        const fb = cleaned.indexOf('{'); const lb = cleaned.lastIndexOf('}');
+        if (fb !== -1) cleaned = cleaned.slice(fb, lb + 1);
+        const parsed = JSON.parse(cleaned);
+        allQuestions = (parsed.questions || []).map((q: any) => ({ question: q.question }));
+      } catch {
+        allQuestions = [{ question: raw.trim() }];
+      }
+
+      const dbQuestions: Question[] = allQuestions.map((q) => ({
+        question: q.question,
+        answer: null,
+        feedback: null,
+        score: null,
+      }));
+
+      const { data: interview, error: insertError } = await supabase
         .from("interviews")
-        .insert({
-          user_id: user.id,
-          track,
-          difficulty,
-          questions: [
-            {
-              question: firstQ.trim(),
-              answer: null,
-              feedback: null,
-              score: null,
-            },
-          ],
-        })
+        .insert({ user_id: user.id, track, difficulty, questions: dbQuestions })
         .select()
         .single();
 
+      if (insertError) {
+        console.error("Interview insert failed:", insertError);
+        return NextResponse.json({ error: `DB insert failed: ${insertError.message}` }, { status: 500 });
+      }
+      if (!interview)
+        return NextResponse.json({ error: "Failed to create interview" }, { status: 500 });
+
       return NextResponse.json({
-        interviewId: interview!.id,
-        question: firstQ.trim(),
+        interviewId: interview.id,
+        question: dbQuestions[0].question,
         questionNumber: 1,
       });
     }
@@ -84,25 +130,25 @@ Ask your FIRST interview question. Make it realistic and appropriately challengi
       const questions = interview.questions as Question[];
       const currentIdx = questions.findIndex((q) => q.answer === null);
       const currentQ = questions[currentIdx];
-      const focus = TRACKS[interview.track];
+      const trackConfig = TRACKS[interview.track] || TRACKS.security_fundamentals;
+      const nextStored = questions[currentIdx + 1] ?? null;
 
-      // Score the answer + decide follow-up
+      // Score the answer + optionally return next stored question
       const evalText = await generateWithRetry({
         jsonMode: true,
-        prompt: `You are a FAANG Data Science interviewer. Focus: ${focus}.
+        prompt: `You are a cybersecurity hiring manager evaluating a junior analyst candidate.
 
+TRACK: ${trackConfig.name} — ${trackConfig.description}
 QUESTION: ${currentQ.question}
 CANDIDATE'S ANSWER: ${answer}
 
 Evaluate the answer and respond ONLY with valid JSON:
 {
   "score": <0-10 integer>,
-  "feedback": "<2-3 sentences: what was strong, what was missing, how a hiring manager would view it>",
-  "ask_followup": <true if a probing follow-up would help, false if time to move on>,
-  "next_question": "<if this is question ${currentIdx + 1} of max 5, ask the next question OR a follow-up. If already at question 5, set to null>"
+  "feedback": "<2-3 sentences: what was strong, what was missing, what a hiring manager would think>"
 }
 
-Be honest but constructive. ${currentIdx + 1 >= 5 ? "This was the final question, set next_question to null." : ""}`,
+Be honest but constructive.`,
       });
 
       let cleaned = evalText
@@ -114,7 +160,6 @@ Be honest but constructive. ${currentIdx + 1 >= 5 ? "This was the final question
       if (fb !== -1) cleaned = cleaned.slice(fb, lb + 1);
       const evalResult = JSON.parse(cleaned);
 
-      // Update current question with answer + feedback
       questions[currentIdx] = {
         ...currentQ,
         answer,
@@ -122,15 +167,7 @@ Be honest but constructive. ${currentIdx + 1 >= 5 ? "This was the final question
         score: evalResult.score,
       };
 
-      const isLast = currentIdx + 1 >= 5 || !evalResult.next_question;
-      if (!isLast) {
-        questions.push({
-          question: evalResult.next_question,
-          answer: null,
-          feedback: null,
-          score: null,
-        });
-      }
+      const isLast = !nextStored;
 
       await supabase
         .from("interviews")
@@ -140,7 +177,7 @@ Be honest but constructive. ${currentIdx + 1 >= 5 ? "This was the final question
       return NextResponse.json({
         feedback: evalResult.feedback,
         score: evalResult.score,
-        nextQuestion: isLast ? null : evalResult.next_question,
+        nextQuestion: isLast ? null : nextStored.question,
         questionNumber: currentIdx + 2,
         isLast,
       });
@@ -178,7 +215,7 @@ Be honest but constructive. ${currentIdx + 1 >= 5 ? "This was the final question
 
       const summaryText = await generateWithRetry({
         jsonMode: true,
-        prompt: `Review this complete Data Science mock interview transcript and give an honest hiring assessment.
+        prompt: `Review this complete cybersecurity analyst mock interview transcript and give an honest hiring assessment.
 
 ${transcript}
 

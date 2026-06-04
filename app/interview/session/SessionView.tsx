@@ -81,8 +81,8 @@ export default function SessionView({ track }: { track: string }) {
         body: JSON.stringify({ action: "start", track, difficulty: "medium" }),
       });
       const data = await res.json();
-      if (data.error) {
-        setEntries([{ type: "feedback", content: `Error: ${data.error}` }]);
+      if (data.error || !data.question) {
+        setEntries([{ type: "feedback", content: `Error: ${data.error ?? "No question received"}` }]);
         return;
       }
       setInterviewId(data.interviewId);

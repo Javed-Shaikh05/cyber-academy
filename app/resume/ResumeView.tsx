@@ -62,7 +62,7 @@ export default function ResumeView() {
             </Link>
 
             <h1 className="text-xl sm:text-3xl font-bold mb-1.5">Resume Review</h1>
-            <p className="text-xs sm:text-sm text-gray-400 mb-6">FAANG-recruiter-level feedback on your resume + ATS scoring</p>
+            <p className="text-xs sm:text-sm text-gray-400 mb-6">Expert-level feedback on your cybersecurity resume + ATS scoring</p>
 
             {stage === 'input' && (
                 <div className="space-y-4">

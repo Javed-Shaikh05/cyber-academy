@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { ArrowLeft, Brain, Code2, Target } from "lucide-react";
+import { ArrowLeft, Brain, Target } from "lucide-react";
 
 export default async function PracticePage() {
   const supabase = await createClient();
@@ -31,7 +31,7 @@ export default async function PracticePage() {
 
       <h1 className="text-xl sm:text-3xl font-bold mb-1.5">Practice Arena</h1>
       <p className="text-xs sm:text-sm text-gray-400 mb-6">
-        Test yourself with quizzes & run real Python code
+        Test yourself with quizzes and daily review
       </p>
 
       {/* Mode cards */}
@@ -46,19 +46,6 @@ export default async function PracticePage() {
           </h2>
           <p className="text-xs sm:text-sm text-gray-400">
             Spaced-repetition questions due today
-          </p>
-        </Link>
-
-        <Link
-          href="/practice/playground"
-          className="glass glass-hover p-5 sm:p-6 bg-linear-to-br from-violet-500/20 to-transparent transition block"
-        >
-          <Code2 className="w-7 h-7 sm:w-8 sm:h-8 text-violet-400 mb-3" />
-          <h2 className="font-semibold text-base sm:text-lg mb-1">
-            Python Playground
-          </h2>
-          <p className="text-xs sm:text-sm text-gray-400">
-            Write & run Python in your browser
           </p>
         </Link>
       </div>

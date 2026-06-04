@@ -126,12 +126,9 @@ export default function ProjectView() {
         <ArrowLeft className="w-4 h-4" /> Dashboard
       </Link>
 
-      <h1 className="text-xl sm:text-3xl font-bold mb-1.5">
-        Project Review & Viva
-      </h1>
+      <h1 className="text-xl sm:text-3xl font-bold mb-1.5">Security Code Review</h1>
       <p className="text-xs sm:text-sm text-gray-400 mb-6">
-        Get senior-level feedback on your code or project, then defend it in a
-        viva.
+        Paste your code and get a security vulnerability analysis.
       </p>
 
       {/* INPUT STAGE */}
@@ -172,8 +169,8 @@ export default function ProjectView() {
             onChange={(e) => setContent(e.target.value)}
             placeholder={
               inputType === "code"
-                ? "Paste your Python/SQL code here..."
-                : "Describe your project: problem, data, approach, model, results..."
+                ? "Paste your code here — Python, JavaScript, SQL, or any language..."
+                : "Describe a system or application you built or are designing..."
             }
             rows={12}
             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm font-mono focus:outline-none focus:border-cyan-400/50 resize-y"
@@ -189,7 +186,7 @@ export default function ProjectView() {
             ) : (
               <Sparkles className="w-4 h-4" />
             )}
-            {loading ? "Reviewing..." : "Review my project"}
+            {loading ? "Analyzing..." : "Review for Security"}
           </button>
         </div>
       )}
@@ -269,7 +266,7 @@ export default function ProjectView() {
               }}
               className="glass glass-hover px-4 py-3 rounded-xl text-sm flex-1"
             >
-              Review another
+              Review for vulnerabilities
             </button>
             <button
               onClick={startViva}

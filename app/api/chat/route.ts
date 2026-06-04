@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
     // 4. Build the prompt
     const systemPrompt = `${mentor.systemPrompt}
 
-You have access to the student's Data Science textbooks. When the context below is relevant, ground your answer in it. When the context is not relevant or insufficient, you may use your general knowledge — but say so explicitly ("This isn't covered in your books, but...").
+You have access to the student's Cybersecurity learning materials. When the context below is relevant, ground your answer in it. When the context is not relevant or insufficient, you may use your general knowledge — but say so explicitly ("This isn't covered in your materials, but...").
 
 Keep answers focused and under 300 words unless the student asks for depth.
 

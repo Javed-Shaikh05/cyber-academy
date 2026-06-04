@@ -82,7 +82,7 @@ export default function InstallPrompt() {
                             <Download className="w-4 h-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold mb-0.5">Install DS Academy</p>
+                            <p className="text-sm font-semibold mb-0.5">Install CyberAcademy</p>
                             <p className="text-xs text-gray-400 mb-3">
                                 Add it to your home screen for the full app experience — works offline, instant load.
                             </p>

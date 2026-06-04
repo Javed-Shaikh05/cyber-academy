@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
         { status: 404 },
       );
 
-    const prompt = `Create a CONCISE cheat sheet for "${subtopic.title}" (Data Science). This is for fast revision before an exam or interview — dense, scannable, no fluff.
+    const prompt = `Create a CONCISE cheat sheet for "${subtopic.title}" (Cybersecurity). This is for fast revision before an exam or interview — dense, scannable, no fluff.
 
 Use markdown with this structure:
 ## ${subtopic.title} — Cheat Sheet

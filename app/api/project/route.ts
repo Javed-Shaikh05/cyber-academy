@@ -18,22 +18,24 @@ export async function POST(req: NextRequest) {
     if (action === "review") {
       const { title, inputType, content } = body;
 
-      const prompt = `You are a senior Data Scientist reviewing a ${inputType === "code" ? "code submission" : "project"} from someone preparing for FAANG interviews and academic exams.
+      const prompt = `You are a senior cybersecurity engineer doing a SECURITY CODE REVIEW.
 
-PROJECT TITLE: ${title || "Untitled"}
+PROJECT TITLE: ${title || 'Untitled'}
 TYPE: ${inputType}
 
-SUBMISSION:
+CODE/DESCRIPTION:
 ${content}
 
-Review it honestly and constructively. Respond ONLY with valid JSON:
+Review this from a SECURITY perspective only. Look for vulnerabilities, insecure patterns, and defensive improvements.
+
+Respond ONLY with valid JSON:
 {
-  "score": <0-100 integer overall quality>,
-  "strengths": ["...", "..."],
-  "issues": ["...", "..."],
-  "suggestions": ["...", "..."],
-  "interview_angle": "<what an interviewer would probe about this project, 1-2 sentences>"
-}`;
+  "score": <0-100 security score>,
+  "strengths": ["<what is done securely>"],
+  "issues": ["<security vulnerability or risk found>"],
+  "suggestions": ["<how to fix or improve security>"],
+  "interview_angle": "<what a security interviewer would ask about this code>"
+}`
 
       const raw = await generateWithRetry({ prompt, jsonMode: true });
       let cleaned = raw
@@ -102,12 +104,12 @@ Review it honestly and constructively. Respond ONLY with valid JSON:
         );
 
       const q = await generateWithRetry({
-        prompt: `You are conducting an oral viva / project deep-dive about this Data Science project:
+        prompt: `You are conducting an oral viva / project deep-dive about this security project:
 
 TITLE: ${pr.title}
 SUBMISSION: ${pr.content.slice(0, 3000)}
 
-Ask your FIRST probing viva question — the kind that tests whether the candidate truly understands their own project (design choices, tradeoffs, alternatives, scaling). Ask ONE clear question, no preamble.`,
+Ask your FIRST probing viva question — the kind that tests whether the candidate truly understands their own project (design choices, tradeoffs, threat model, alternatives). Ask ONE clear question, no preamble.`,
       });
 
       const questions = [{ question: q.trim(), answer: null, feedback: null }];
@@ -141,7 +143,7 @@ Ask your FIRST probing viva question — the kind that tests whether the candida
 
       const evalRaw = await generateWithRetry({
         jsonMode: true,
-        prompt: `Viva on Data Science project "${pr.title}".
+        prompt: `Viva on security project "${pr.title}".
 
 QUESTION: ${currentQ.question}
 CANDIDATE ANSWER: ${answer}

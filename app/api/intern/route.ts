@@ -18,21 +18,24 @@ export async function POST(req: NextRequest) {
             const ds = getDataset(datasetId)
             if (!ds) return NextResponse.json({ error: 'Dataset not found' }, { status: 404 })
 
-            const prompt = `You are a Data Science team lead assigning a task to a new intern.
+            const prompt = `You are a cybersecurity team lead assigning an analysis task to a junior security analyst intern.
 
 DATASET: "${ds.name}" (${ds.domain})
-COLUMNS: ${ds.columns}
-CONTEXT: ${ds.description}
+DATA DESCRIPTION: ${ds.description}
+SCENARIO: ${ds.scenario}
 
-Create a realistic but BEGINNER-FRIENDLY intern brief. Respond ONLY with valid JSON:
+Create a realistic security analysis brief. Respond ONLY with valid JSON:
 {
-  "title": "<short project title>",
-  "scenario": "<2-3 sentences: the business situation and why this matters, like a real manager explaining it>",
-  "tasks": ["<task 1 — start simple, e.g. load and explore>", "<task 2>", "<task 3>", "<task 4 — slightly harder>"],
-  "hint": "<one friendly tip to get them started, mentioning pandas>"
-}
-
-Keep tasks achievable with pandas in a browser. Make the scenario feel like a real workplace.`
+  "title": "<mission title e.g. 'Investigate Suspicious Login Activity'>",
+  "scenario": "<2-3 sentences: the security incident and what the analyst needs to do>",
+  "tasks": [
+    "<task 1 — load and explore the data>",
+    "<task 2 — identify specific suspicious patterns>",
+    "<task 3 — quantify the threat>",
+    "<task 4 — write your findings/recommendations>"
+  ],
+  "hint": "<one tip about what to look for in this specific dataset>"
+}`
 
             const raw = await generateWithRetry({ prompt, jsonMode: true, temperature: 0.6 })
             let cleaned = raw.replace(/```json\s*/gi, '').replace(/```/g, '').trim()
@@ -68,23 +71,24 @@ Keep tasks achievable with pandas in a browser. Make the scenario feel like a re
 
             const brief = project.brief as any
 
-            const prompt = `You are a supportive Data Science team lead reviewing a new intern's work.
+            const prompt = `You are a cybersecurity team lead reviewing a junior analyst's investigation.
 
-THE TASK YOU GAVE THEM:
-${brief.scenario}
-Tasks: ${brief.tasks.join('; ')}
+MISSION: ${brief.title}
+SCENARIO: ${brief.scenario}
+TASKS ASSIGNED: ${brief.tasks.join(', ')}
 
-THEIR CODE:
+ANALYST'S CODE:
 ${code}
 
-${output ? `THEIR OUTPUT:\n${output}\n` : ''}
+CODE OUTPUT:
+${output}
 
-Review like a kind but honest manager. Respond ONLY with valid JSON:
+Review their work and respond ONLY with valid JSON:
 {
   "score": <0-100>,
+  "manager_note": "<1-2 sentences overall impression>",
   "what_went_well": ["...", "..."],
-  "improvements": ["...", "..."],
-  "manager_note": "<2-3 sentences of encouraging, constructive feedback like a real boss would give an intern>"
+  "improvements": ["...", "..."]
 }
 
 Be encouraging — they're learning. Give 2-3 items per list.`

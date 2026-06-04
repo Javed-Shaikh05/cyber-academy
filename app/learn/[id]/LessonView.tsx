@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { showXP } from "@/components/XPToast";
 import InlineQuiz from "@/components/InlineQuiz";
-import MiniPlayground from "@/components/MiniPlayground";
 import Flashcards from "@/components/Flashcards";
 
 interface Props {
@@ -35,7 +34,6 @@ export default function LessonView({
 }: Props) {
   const [content, setContent] = useState<string | null>(null);
   const [sources, setSources] = useState<any[]>([]);
-  const [exercise, setExercise] = useState("");
   const [loading, setLoading] = useState(true);
   const [status, setStatus] = useState(initialStatus);
   const [marking, setMarking] = useState(false);
@@ -66,7 +64,6 @@ export default function LessonView({
       } else {
         setContent(data.content);
         setSources(data.sources || []);
-        setExercise(data.exercise || "");
       }
     } catch (err: any) {
       setContent(`Error: ${err.message}`);
@@ -204,8 +201,6 @@ export default function LessonView({
             {/* Inline quiz — always available */}
             <InlineQuiz subtopicId={subtopic.id} />
 
-            {/* Python exercise — only if the topic generated one */}
-            {exercise && <MiniPlayground starterCode={exercise} />}
           </div>
         </div>
       )}

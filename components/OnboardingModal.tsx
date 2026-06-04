@@ -52,7 +52,7 @@ export default function OnboardingModal() {
         <p className="text-sm font-medium mb-2">What's your main goal?</p>
         <div className="grid grid-cols-1 gap-2 mb-6">
           {[
-            { id: "faang", label: "Crack FAANG interviews", icon: Target },
+            { id: "faang", label: "Ace security interviews", icon: Target },
             {
               id: "academic",
               label: "Excel in academics / exams",

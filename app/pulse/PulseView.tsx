@@ -77,9 +77,9 @@ export default function PulseView() {
 
       <div className="flex items-start justify-between mb-6 gap-2">
         <div>
-          <h1 className="text-xl sm:text-3xl font-bold mb-1">DS Pulse</h1>
+          <h1 className="text-xl sm:text-3xl font-bold mb-1">Cyber Pulse</h1>
           <p className="text-xs sm:text-sm text-gray-400">
-            What&apos;s trending in Data Science right now
+            What&apos;s trending in Cybersecurity right now
           </p>
         </div>
         {updated && (

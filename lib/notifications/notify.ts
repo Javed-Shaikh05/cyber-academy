@@ -67,7 +67,7 @@ export function checkDailyReminder(opts: { streak: number; reviewsDue: number })
 
   if (opts.streak === 0) {
     title = '📚 Time to learn'
-    body = 'Start your Data Science streak today. Just one lesson counts!'
+    body = 'Start your security training streak today. One lesson counts!'
   } else if (opts.reviewsDue > 0) {
     title = '🧠 Reviews are waiting'
     body = `You have ${opts.reviewsDue} question${opts.reviewsDue > 1 ? 's' : ''} due for review. Lock in what you learned!`

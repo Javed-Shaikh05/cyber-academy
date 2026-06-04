@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       .map((m: any) => m.content)
       .join("\n\n");
 
-    const prompt = `Generate 5 multiple-choice questions to test understanding of "${subtopic.title}" (${subtopic.difficulty} level Data Science).
+    const prompt = `Generate 5 multiple-choice questions to test understanding of "${subtopic.title}" (${subtopic.difficulty} level Cybersecurity).
 
 ${context ? `Base them on this material:\n${context}\n\n` : ""}
 

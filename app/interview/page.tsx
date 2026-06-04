@@ -3,45 +3,45 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft,
-  Code2,
-  Brain,
-  BarChart3,
-  Users,
+  Shield,
+  Network,
+  Globe,
+  Lock,
   Trophy,
 } from "lucide-react";
 
 const TRACKS = [
   {
-    id: "technical",
-    title: "Technical / Coding",
-    desc: "Python, SQL, data manipulation",
-    icon: "Code2",
+    id: "security_fundamentals",
+    title: "Security Fundamentals",
+    desc: "CIA triad, threat landscape, basic concepts",
+    icon: "Shield",
     color: "from-cyan-500/20",
   },
   {
-    id: "ml_concepts",
-    title: "ML Concepts",
-    desc: "Algorithms, evaluation, theory",
-    icon: "Brain",
+    id: "network_security",
+    title: "Network Security",
+    desc: "Firewalls, VPNs, protocols, network attacks",
+    icon: "Network",
     color: "from-violet-500/20",
   },
   {
-    id: "stats",
-    title: "Statistics",
-    desc: "Probability, testing, A/B",
-    icon: "BarChart3",
+    id: "web_security",
+    title: "Web & App Security",
+    desc: "OWASP Top 10, XSS, SQL injection defense",
+    icon: "Globe",
     color: "from-pink-500/20",
   },
   {
-    id: "behavioral",
-    title: "Behavioral",
-    desc: "Projects, teamwork, communication",
-    icon: "Users",
+    id: "cryptography",
+    title: "Cryptography",
+    desc: "Encryption, hashing, PKI, TLS/HTTPS",
+    icon: "Lock",
     color: "from-green-500/20",
   },
 ];
 
-const ICONS: Record<string, any> = { Code2, Brain, BarChart3, Users };
+const ICONS: Record<string, any> = { Shield, Network, Globe, Lock };
 
 export default async function InterviewPage() {
   const supabase = await createClient();
@@ -70,8 +70,7 @@ export default async function InterviewPage() {
 
       <h1 className="text-xl sm:text-3xl font-bold mb-1.5">Mock Interview</h1>
       <p className="text-xs sm:text-sm text-gray-400 mb-6">
-        Practice with an AI FAANG interviewer. Get scored, get feedback, get
-        hired.
+        Practice with an AI cybersecurity hiring manager. Get scored, get feedback, get hired.
       </p>
 
       {/* Tracks */}

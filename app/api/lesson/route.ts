@@ -17,12 +17,12 @@ export async function POST(req: NextRequest) {
     // 1. Check cache
     const { data: cached } = await supabase
       .from('lesson_content')
-      .select('content, sources, exercise')
+      .select('content, sources')
       .eq('subtopic_id', subtopicId)
       .single()
 
     if (cached) {
-      return NextResponse.json({ content: cached.content, sources: cached.sources, exercise: cached.exercise || '', cached: true })
+      return NextResponse.json({ content: cached.content, sources: cached.sources, cached: true })
     }
 
     // 2. Get subtopic details
@@ -41,7 +41,6 @@ export async function POST(req: NextRequest) {
       );
 
     const topicTitle = subtopic.topics?.title || "";
-    const phaseTitle = subtopic.topics?.phases?.title || "";
 
     // 3. Retrieve relevant book chunks
     const query = `${subtopic.title} ${topicTitle}`;
@@ -52,7 +51,7 @@ export async function POST(req: NextRequest) {
     });
     const goodMatches = (matches || []).filter((m: any) => m.similarity > 0.25);
     const context = goodMatches
-      .map((m: any, i: number) => `[${m.source}] ${m.content}`)
+      .map((m: any) => `[${m.source}] ${m.content}`)
       .join("\n\n---\n\n");
 
     // 4. Generate lesson
@@ -91,32 +90,7 @@ RULES:
 - Every example from real life, not abstract.
 - Defensive mindset throughout.`
 
-    // Generate lesson + exercise in ONE call to save quota
-    const fullPrompt = `${prompt}
-
----
-
-After the lesson, add a practice exercise. Output your response as JSON ONLY (no markdown fences):
-{
-  "lesson": "<the full lesson in markdown, following the structure above>",
-  "exercise": "<a short 10-15 line beginner Python exercise using only numpy/pandas, with a TODO comment for the learner. If this topic isn't suited to code, use empty string>"
-}`
-
-    const raw = await generateWithRetry({ prompt: fullPrompt, jsonMode: true })
-
-    let content = ''
-    let exercise = ''
-    try {
-      let cleaned = raw.replace(/```json\s*/gi, '').replace(/```/g, '').trim()
-      const fb = cleaned.indexOf('{'); const lb = cleaned.lastIndexOf('}')
-      if (fb !== -1) cleaned = cleaned.slice(fb, lb + 1)
-      const parsed = JSON.parse(cleaned)
-      content = parsed.lesson || raw
-      exercise = parsed.exercise || ''
-    } catch {
-      // If JSON parsing fails, treat the whole thing as the lesson
-      content = raw
-    }
+    const content = await generateWithRetry({ prompt })
 
     const sources = goodMatches.map((m: any) => ({
       source: m.source,
@@ -127,10 +101,9 @@ After the lesson, add a practice exercise. Output your response as JSON ONLY (no
       subtopic_id: subtopicId,
       content,
       sources,
-      exercise,
     })
 
-    return NextResponse.json({ content, sources, exercise, cached: false })
+    return NextResponse.json({ content, sources, cached: false })
   } catch (err: any) {
     console.error("Lesson generation error:", err);
     return NextResponse.json({ error: err.message }, { status: 500 });

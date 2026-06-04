@@ -22,7 +22,9 @@ import {
   FileText,
   Network,
   GraduationCap,
-  Briefcase,
+  Search,
+  ShieldAlert,
+  Terminal,
 } from "lucide-react";
 import { getRank, progressToNextLevel } from "@/lib/gamification/levels";
 import { BADGES } from "@/lib/gamification/badges";
@@ -189,7 +191,7 @@ export default async function Dashboard() {
             href="/practice"
             icon={Code2}
             title="Practice"
-            desc="Quizzes & Python"
+            desc="Quizzes & review"
             gradient="from-violet-500/20"
             ready
           />
@@ -197,16 +199,16 @@ export default async function Dashboard() {
             href="/interview"
             icon={Trophy}
             title="Interview"
-            desc="Mock FAANG rounds"
+            desc="Mock security interviews"
             gradient="from-pink-500/20"
             ready
           />
           <ActionCard
             href="/project"
-            icon={FileCode}
-            title="Project Lab"
-            desc="Review & viva"
-            gradient="from-green-500/20"
+            icon={ShieldAlert}
+            title="Code Review"
+            desc="Security analysis"
+            gradient="from-red-500/20"
             ready
           />
           <ActionCard
@@ -227,10 +229,18 @@ export default async function Dashboard() {
           />
           <ActionCard
             href="/intern"
-            icon={Briefcase}
-            title="Intern Lab"
-            desc="Real datasets"
-            gradient="from-cyan-500/20"
+            icon={Search}
+            title="Analyst Lab"
+            desc="Security investigations"
+            gradient="from-yellow-500/20"
+            ready
+          />
+          <ActionCard
+            href="/terminal"
+            icon={Terminal}
+            title="Terminal"
+            desc="CyberLab console"
+            gradient="from-green-500/20"
             ready
           />
         </div>

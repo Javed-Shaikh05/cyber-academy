@@ -31,18 +31,18 @@ export async function GET() {
     }
 
     // Generate fresh briefing
-    const prompt = `You are a Data Science career advisor. Generate a current industry briefing for someone learning DS and targeting FAANG / top company roles.
+    const prompt = `You are a Cybersecurity career advisor. Generate a current industry briefing for someone learning cybersecurity and targeting security engineer / analyst / pentester roles.
 
 Respond ONLY with valid JSON:
 {
   "hot_skills": [{"skill": "...", "why": "<1 line why it matters now>"}],
   "trending_tools": [{"tool": "...", "use": "<1 line>"}],
-  "interview_trends": ["<what top companies are focusing on in DS interviews>", "..."],
+  "interview_trends": ["<what top companies are focusing on in security interviews>", "..."],
   "emerging_topics": [{"topic": "...", "note": "<1 line>"}],
-  "advice": "<2-3 sentences of strategic advice for a learner right now>"
+  "advice": "<2-3 sentences of strategic advice for a cybersecurity learner right now>"
 }
 
-Give 5 items in hot_skills, 5 in trending_tools, 4 in interview_trends, 4 in emerging_topics. Be specific and practical (real tool/skill names).`;
+Give 5 items in hot_skills, 5 in trending_tools, 4 in interview_trends, 4 in emerging_topics. Be specific and practical (real tool/skill/CVE/attack-technique names).`;
 
     const raw = await generateWithRetry({ prompt, jsonMode: true });
     let cleaned = raw

@@ -137,7 +137,7 @@ export async function GET() {
       });
     });
 
-    // Card: FAANG goal → suggest a mock interview occasionally
+    // Card: interview goal → suggest a mock interview occasionally
     const completedCount = Array.from(statusMap.values()).filter(
       (s) => s === "completed",
     ).length;

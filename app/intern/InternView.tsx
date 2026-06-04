@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { DATASETS, getDataset } from '@/lib/datasets/samples'
 import {
-    ArrowLeft, Loader2, Briefcase, Play, CheckCircle2, Lightbulb,
+    ArrowLeft, Loader2, Search, Play, CheckCircle2, Lightbulb,
     ClipboardList, Award, ThumbsUp, TrendingUp, Database, FileSpreadsheet
 } from 'lucide-react'
 import { showXP } from '@/components/XPToast'
@@ -42,13 +42,15 @@ export default function InternView() {
             setCode(`import pandas as pd
 from io import StringIO
 
-# Your dataset is loaded into the 'data' variable
-data = """${dataset.csv}"""
-df = pd.read_csv(StringIO(data))
+# Security dataset loaded — analyze it!
+raw = """${dataset.data}"""
+df = pd.read_csv(StringIO(raw))
 
-# Start exploring! For example:
-print(df.head())
-print(df.shape)
+# Start your investigation:
+print("=== DATA OVERVIEW ===")
+print(df.head(10))
+print(f"\\nRows: {df.shape[0]}, Columns: {df.shape[1]}")
+print(f"\\nColumns: {list(df.columns)}")
 `)
             setStage('work')
         } finally {
@@ -123,11 +125,11 @@ sys.stdout = StringIO()
                 </Link>
 
                 <div className="flex items-center gap-3 mb-2">
-                    <Briefcase className="w-7 h-7 text-cyan-400" />
-                    <h1 className="text-xl sm:text-2xl font-bold">Intern Project Lab</h1>
+                    <Search className="w-7 h-7 text-cyan-400" />
+                    <h1 className="text-xl sm:text-2xl font-bold">Analyst Lab</h1>
                 </div>
                 <p className="text-sm text-gray-400 mb-6">
-                    Work a real dataset like a first-day intern. Pick a project, get a brief from your &quot;manager&quot;, write Python, and get reviewed.
+                    Pick a security scenario, get an investigation brief from your team lead, write Python to analyze the data, and submit for review.
                 </p>
 
                 <div className="space-y-3">
@@ -207,7 +209,7 @@ sys.stdout = StringIO()
                     </button>
                     {showData && (
                         <pre className="mt-2 text-[10px] bg-black/40 rounded-lg p-3 overflow-x-auto text-gray-400 max-h-40 overflow-y-auto">
-                            {ds?.csv.split('\n').slice(0, 8).join('\n')}
+                            {ds?.data.split('\n').slice(0, 8).join('\n')}
                             {'\n...'}
                         </pre>
                     )}

@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
             const shuffled = pool.sort(() => Math.random() - 0.5).slice(0, Math.min(count, pool.length))
             const topicList = shuffled.map((s: any) => s.title).join(', ')
 
-            const prompt = `Create a ${count}-question multiple-choice EXAM for a Data Science student, covering these topics: ${topicList}.
+            const prompt = `Create a ${count}-question multiple-choice EXAM for a Cybersecurity student, covering these topics: ${topicList}.
 
 Mix difficulty (some easy, some medium, a few hard). Each question tests real understanding, not trivia.
 

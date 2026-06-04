@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
         if (!subtopic) return NextResponse.json({ error: 'Subtopic not found' }, { status: 404 })
 
-        const prompt = `Create flashcards for "${subtopic.title}" (Data Science) to help a student memorize the key facts FAST for exams and interviews.
+        const prompt = `Create flashcards for "${subtopic.title}" (Cybersecurity) to help a student memorize the key facts FAST for exams and interviews.
 
 Respond ONLY with valid JSON:
 {

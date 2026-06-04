@@ -14,12 +14,12 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'Resume text is too short' }, { status: 400 })
         }
 
-        const prompt = `You are a senior tech recruiter at a top company (FAANG-tier) reviewing a Data Science candidate's resume.
+        const prompt = `You are a senior cybersecurity hiring manager reviewing a Cybersecurity candidate's resume.
 
 RESUME:
 ${resumeText}
 
-${jobDescription ? `TARGET JOB DESCRIPTION:\n${jobDescription}\n\nEvaluate the resume specifically for this role.\n` : 'No specific job target — give general FAANG/top-DS-role feedback.\n'}
+${jobDescription ? `TARGET JOB DESCRIPTION:\n${jobDescription}\n\nEvaluate the resume specifically for this role.\n` : 'No specific job target — give general cybersecurity role feedback (security engineer, analyst, pentester, SOC).\n'}
 
 Be honest, specific, and actionable. Respond ONLY with valid JSON:
 {
